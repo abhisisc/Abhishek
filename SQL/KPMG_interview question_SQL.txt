@@ -1,0 +1,54 @@
+Q1.How do you retrieve the top 5 records from a table?
+
+-> SELECT * FROM table_name
+ORDER BY column_name
+LIMIT 5;
+
+Q2.  Write a query to find the second-highest salary in an employee table.
+
+-> SELECT DISTINCT salary
+FROM employee
+ORDER BY salary DESC
+LIMIT 1 OFFSET 1;
+
+Q3.How do you delete duplicate records from a table without using a temporary table?
+-> DELETE FROM table_name
+   WHERE id_column NOT IN (
+    SELECT id_column FROM (
+        SELECT MIN(id_column) AS id_column
+        FROM table_name
+        GROUP BY column_name
+    ) AS unique_records
+);
+
+Q4. Write a query using a CTE to calculate the running total of sales per month.
+
+->WITH MonthlySales AS (
+    SELECT
+        DATE_TRUNC('month', sale_date) AS month,
+        SUM(amount) AS monthly_sales
+    FROM sales
+    GROUP BY DATE_TRUNC('month', sale_date)
+    ORDER BY month
+)
+SELECT
+    month,
+    monthly_sales,
+    SUM(monthly_sales) OVER (ORDER BY month) AS running_total
+FROM MonthlySales;
+
+Q5.How do you optimize a slow-running SQL query?
+
+->  Use Filtering Conditions Wisely
+-> Limit Data Retrieval
+
+Q6.What are indexes, and when would you use them?
+-> Single-Column Index: An index on a single column, ideal for queries filtering or sorting by that column.
+->Composite Index: An index on multiple columns, useful when multiple columns are used together in filtering or sorting.
+Unique Index:Ensures all values in the indexed column(s) are unique. Often used on primary key columns.
+
+Q7. What is normalization, and why is it important in database design?
+
+->Eliminate Redundant Data: Ensures that information is stored only once, reducing storage costs and minimizing inconsistencies.
+-> Enhance Data Integrity: Minimizes data anomalies during updates, inserts, and deletions, thus preserving data accuracy.
+-> Optimize Query Performance: By creating smaller, related tables, normalization allows for efficient data retrieval through precise joins, making queries faster and easier to manage.
